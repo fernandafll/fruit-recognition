@@ -1,7 +1,8 @@
-tensorflow==2.13.0
+tensorflow==2.20.0
 gunicorn
 flask
 numpy
 pillow
+
 
 
