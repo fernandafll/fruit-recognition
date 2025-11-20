@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🍇 Fruit Recognition</title>
+
+  <style>
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-image: url('https://i.imgur.com/sP5ZBP1.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      font-family: 'Arial';
+    }
+
+    /* NAVBAR */
+    .navbar {
+      width: 100%;
+      background: rgba(255,255,255,0.25);
+      backdrop-filter: blur(12px);
+      padding: 15px 40px;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      font-size: 22px;
+      font-weight: bold;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 999;
+      border-radius: 0 0 25px 25px;
+    }
+
+    .navbar a {
+      text-decoration: none;
+      color: #4b0082;
+      transition: 0.2s;
+    }
+
+    .navbar a:hover {
+      color: #6a0dad;
+    }
+
+    /* GLASS CONTAINER */
+    .glass-container {
+      width: 88%;
+      margin: 140px auto 40px auto;
+      padding: 40px;
+      border-radius: 35px;
+      background: rgba(255,255,255,0.25);
+      backdrop-filter: blur(16px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #2b0050;
+      gap: 40px;
+    }
+
+    .left-box {
+      width: 50%;
+    }
+
+    .left-box h1 {
+      font-size: 60px;
+      font-weight: 900;
+      margin-bottom: 20px;
+      color: white;
+      text-shadow: 3px 3px 10px #000;
+    }
+
+    .left-box p {
+      font-size: 22px;
+      margin-bottom: 25px;
+      color: #ffffff;
+      text-shadow: 2px 2px 5px #00000070;
+    }
+
+    .features ul {
+      font-size: 20px;
+      list-style: none;
+      padding-left: 0;
+      color: #ffffff;
+      text-shadow: 2px 2px 5px #00000070;
+    }
+
+    /* RIGHT - UPLOAD BOX */
+    .upload-box {
+      width: 50%;
+      background: white;
+      border-radius: 25px;
+      padding: 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+      color: #4b0082;
+      text-align: center;
+    }
+
+    .upload-box h2 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      background-color: #4b0082;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      margin-top: 12px;
+    }
+
+    .btn:hover {
+      background-color: #6a0dad;
+    }
+
+    .prediction-box {
+      margin-top: 25px;
+      padding: 25px;
+      border-radius: 20px;
+      background: #fafafa;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+
+    .prediction-box img {
+      max-width: 280px;
+      max-height: 180px;
+      object-fit: contain;
+      border-radius: 15px;
+      margin-top: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.45);
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <div class="navbar">
+      <a href="/">Home</a>
+      <a href="/catalog">Catalog</a>
+
+      {% if session.get('user_id') %}
+          <a href="/logout" style="color: #b30000;">Logout</a>
+      {% else %}
+          <a href="/login">Login</a>
+          <a href="/register">Register</a>
+      {% endif %}
+  </div>
+
+
+  <!-- MAIN AREA -->
+  <div class="glass-container">
+
+    <!-- LEFT SECTION -->
+    <div class="left-box">
+      <h1>Fruit Recognition</h1>
+
+      <p>
+        Upload a fruit image and let our AI model classify it with confidence  
+        among <b>10 different fruit categories</b>.
+      </p>
+
+      <div class="features">
+        <ul>
+          <li>🍒 High-accuracy classification</li>
+          <li>🍉 Nutritional & visual database</li>
+          <li>⚡ Fast, intuitive and beautiful UI</li>
+        </ul>
+      </div>
+    </div>
+
+
+    <!-- RIGHT SECTION -->
+    <div class="upload-box">
+
+      <h2>Upload a fruit image</h2>
+      <p style="font-size:16px;">
+        Make sure the fruit is clearly visible for best prediction results.
+      </p>
+
+      {% if session.get('user_id') %}
+      <form action="/predict" method="post" enctype="multipart/form-data">
+          <input type="file" name="file" accept="image/*" required><br>
+          <button class="btn">Upload & Predict</button>
+      </form>
+      {% else %}
+      <p style="font-size:20px; font-weight:bold; color:#4b0082;">
+        Login required to predict.
+      </p>
+      <a href="/login"><button class="btn">Login</button></a>
+      {% endif %}
+
+      {% if prediction %}
+      <div class="prediction-box">
+        <h3 style="font-size:26px;">Prediction: {{ prediction.fruit }}</h3>
+        <p style="font-weight:bold; font-size:20px;">Confidence: {{ prediction.confidence }}%</p>
+
+        <img src="/static/uploads/{{ image }}" alt="Prediction Image">
+      </div>
+      {% endif %}
+
+    </div>
+
+  </div>
+
+</body>
+</html>
